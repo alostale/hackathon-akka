@@ -5,17 +5,17 @@ import java.util.Date;
 
 public class OpenbravoLoginInfo implements Serializable {
   private static final long serialVersionUID = 1L;
-  
+
   private String ip;
   private String country;
   private Date date;
 
   public OpenbravoLoginInfo(String ip, String country, Date date) {
-    this.ip=ip;
-    this.country=country;
-    this.date=date;
+    this.ip = ip;
+    this.country = country;
+    this.date = date;
   }
-  
+
   public String getIp() {
     return ip;
   }
