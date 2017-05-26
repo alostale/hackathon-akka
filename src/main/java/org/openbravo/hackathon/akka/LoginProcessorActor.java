@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import akka.actor.ActorRef;
+import akka.actor.Props;
 import akka.persistence.AbstractPersistentActor;
 
 public class LoginProcessorActor extends AbstractPersistentActor {
 
   private Map<String, Integer> loginsByCountry = new HashMap<String, Integer>();
   private int snapShotInterval = 1000;
+  private ActorRef readerActor;
 
   @Override
   public String persistenceId() {
@@ -23,6 +26,14 @@ public class LoginProcessorActor extends AbstractPersistentActor {
       numEvents += loginsByCountry.get(country);
     }
     return numEvents;
+  }
+
+  static public Props props(ActorRef readerActor) {
+    return Props.create(LoginProcessorActor.class, () -> new LoginProcessorActor(readerActor));
+  }
+
+  public LoginProcessorActor(ActorRef readerActor) {
+    this.readerActor = readerActor;
   }
 
   @Override
