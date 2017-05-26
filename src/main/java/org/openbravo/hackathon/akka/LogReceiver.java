@@ -13,7 +13,8 @@ public class LogReceiver {
   public static void main(String[] args) throws IOException {
     final ActorSystem system = ActorSystem.create("log");
 
-    ActorRef processorActor = system.actorOf(LoginProcessorActor.props(null));
+    ActorRef readerActor = system.actorOf(ReaderActor.props());
+    ActorRef processorActor = system.actorOf(LoginProcessorActor.props(readerActor));
     try (BufferedReader br = new BufferedReader(new FileReader("/tmp/log"))) {
       String line;
       while (true) {
