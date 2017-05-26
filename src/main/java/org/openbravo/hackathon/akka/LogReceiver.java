@@ -1,25 +1,21 @@
 package org.openbravo.hackathon.akka;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class LogReceiver {
 
-  public static void main(String[] args) {
-    Path path = Paths.get("/tmp");
+  public static void main(String[] args) throws IOException {
+    try (BufferedReader br = new BufferedReader(new FileReader("/tmp/log"))) {
+      String line;
+      while (true) {
+        while ((line = br.readLine()) == null) {
+        }
 
-    try {
-
-      Files.lines(path).forEach(System.out::println);// print each line
-
-    } catch (IOException ex) {
-
-      ex.printStackTrace();// handle exception here
-
+        System.out.println(line);
+      }
     }
-
   }
 
 }
