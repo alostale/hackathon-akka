@@ -39,8 +39,7 @@ public class LoginProcessorActor extends AbstractPersistentActor {
 
   @Override
   public Receive createReceiveRecover() {
-    // TODO Auto-generated method stub
-    return null;
+    return receiveBuilder().match(OpenbravoLoginInfo.class, loginsByCountry::updateState).build();
   }
 
 }
