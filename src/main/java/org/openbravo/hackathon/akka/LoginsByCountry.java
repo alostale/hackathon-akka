@@ -32,4 +32,10 @@ public class LoginsByCountry {
     return loginsByCountry.get(country);
   }
 
+  public void printLoginsByCountry() {
+    for (String country : getCountries()) {
+      System.out.println(country + ": " + getLoginsForCountry(country));
+    }
+  }
+
 }
