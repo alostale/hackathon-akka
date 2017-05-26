@@ -10,8 +10,10 @@ public class ReaderActor extends AbstractActor {
 
   @Override
   public Receive createReceive() {
+    System.out.println("ReaderActor.createReceive");
     return receiveBuilder().match(LoginsByCountry.class, loginByCountry -> {
       loginByCountry.printLoginsByCountry();
+      System.out.println("ReaderActor.receiveBuilder");
     }).build();
   }
 }

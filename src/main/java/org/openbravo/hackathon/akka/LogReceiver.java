@@ -15,6 +15,7 @@ public class LogReceiver {
 
     ActorRef readerActor = system.actorOf(ReaderActor.props());
     ActorRef processorActor = system.actorOf(LoginProcessorActor.props(readerActor));
+
     try (BufferedReader br = new BufferedReader(new FileReader("/tmp/log"))) {
       String line;
       while (true) {

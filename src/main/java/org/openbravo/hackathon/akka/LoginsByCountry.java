@@ -1,12 +1,13 @@
 package org.openbravo.hackathon.akka;
 
-import java.util.HashMap;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class LoginsByCountry {
+public class LoginsByCountry implements Serializable {
 
-  private Map<String, Integer> loginsByCountry = new HashMap<String, Integer>();
+  private Map<String, Integer> loginsByCountry = new ConcurrentHashMap<>();
 
   public int getNumEvents() {
     int numEvents = 0;
@@ -17,8 +18,12 @@ public class LoginsByCountry {
   }
 
   public void updateState(OpenbravoLoginInfo c) {
+    System.out.println("update state");
+    if (c.getCountry() == null) {
+      return;
+    }
     if (loginsByCountry.containsKey(c.getCountry())) {
-      loginsByCountry.put(c.getCountry(), loginsByCountry.get(c.getCountry() + 1));
+      loginsByCountry.put(c.getCountry(), loginsByCountry.get(c.getCountry()) + 1);
     } else {
       loginsByCountry.put(c.getCountry(), 1);
     }
