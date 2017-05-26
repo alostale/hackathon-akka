@@ -1,6 +1,5 @@
 package org.openbravo.hackathon.akka;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,8 +42,8 @@ public class LoginProcessorActor extends AbstractPersistentActor {
         getContext().getSystem().eventStream().publish(evt);
         if (lastSequenceNr() % snapShotInterval == 0 && lastSequenceNr() != 0)
           // IMPORTANT: create a copy of snapshot because ExampleState is mutable
-
-          saveSnapshot(loginsByCountry);
+          readerActor.tell(loginsByCountry, readerActor);
+        saveSnapshot(loginsByCountry);
       });
     }).matchEquals("print", s -> System.out.println(loginsByCountry)).build();
   }
@@ -64,30 +63,4 @@ public class LoginProcessorActor extends AbstractPersistentActor {
     return null;
   }
 
-}
-
-class Cmd implements Serializable {
-  private static final long serialVersionUID = 1L;
-  private final String data;
-
-  public Cmd(String data) {
-    this.data = data;
-  }
-
-  public String getData() {
-    return data;
-  }
-}
-
-class Evt implements Serializable {
-  private static final long serialVersionUID = 1L;
-  private final String data;
-
-  public Evt(String data) {
-    this.data = data;
-  }
-
-  public String getData() {
-    return data;
-  }
 }
