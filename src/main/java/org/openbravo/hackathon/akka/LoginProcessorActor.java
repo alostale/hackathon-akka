@@ -30,7 +30,6 @@ public class LoginProcessorActor extends AbstractPersistentActor {
         loginsByCountry.updateState(c);
         getContext().getSystem().eventStream().publish(evt);
         if (lastSequenceNr() % snapShotInterval == 0 && lastSequenceNr() != 0)
-          // IMPORTANT: create a copy of snapshot because ExampleState is mutable
           readerActor.tell(loginsByCountry, readerActor);
         saveSnapshot(loginsByCountry);
       });
