@@ -29,9 +29,10 @@ public class LoginProcessorActor extends AbstractPersistentActor {
       persist(c, (OpenbravoLoginInfo evt) -> {
         loginsByCountry.updateState(c);
         getContext().getSystem().eventStream().publish(evt);
-        if (lastSequenceNr() % snapShotInterval == 0 && lastSequenceNr() != 0)
-          readerActor.tell(loginsByCountry, readerActor);
-        saveSnapshot(loginsByCountry);
+        readerActor.tell(loginsByCountry, readerActor);
+        if (lastSequenceNr() % snapShotInterval == 0 && lastSequenceNr() != 0) {
+          saveSnapshot(loginsByCountry);
+        }
       });
     }).matchEquals("print", s -> System.out.println(loginsByCountry)).build();
   }
