@@ -1,29 +1,18 @@
 package org.openbravo.hackathon.akka;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.persistence.AbstractPersistentActor;
 
 public class LoginProcessorActor extends AbstractPersistentActor {
 
-  private Map<String, Integer> loginsByCountry = new HashMap<String, Integer>();
+  private LoginsByCountry loginsByCountry = new LoginsByCountry();
   private int snapShotInterval = 1000;
   private ActorRef readerActor;
 
   @Override
   public String persistenceId() {
     return "sample-id-1";
-  }
-
-  public int getNumEvents() {
-    int numEvents = 0;
-    for (String country : loginsByCountry.keySet()) {
-      numEvents += loginsByCountry.get(country);
-    }
-    return numEvents;
   }
 
   static public Props props(ActorRef readerActor) {
@@ -38,7 +27,7 @@ public class LoginProcessorActor extends AbstractPersistentActor {
   public Receive createReceive() {
     return receiveBuilder().match(OpenbravoLoginInfo.class, c -> {
       persist(c, (OpenbravoLoginInfo evt) -> {
-        updateState(c);
+        loginsByCountry.updateState(c);
         getContext().getSystem().eventStream().publish(evt);
         if (lastSequenceNr() % snapShotInterval == 0 && lastSequenceNr() != 0)
           // IMPORTANT: create a copy of snapshot because ExampleState is mutable
@@ -46,15 +35,6 @@ public class LoginProcessorActor extends AbstractPersistentActor {
         saveSnapshot(loginsByCountry);
       });
     }).matchEquals("print", s -> System.out.println(loginsByCountry)).build();
-  }
-
-  private void updateState(OpenbravoLoginInfo c) {
-    if (loginsByCountry.containsKey(c.getCountry())) {
-      loginsByCountry.put(c.getCountry(), loginsByCountry.get(c.getCountry() + 1));
-    } else {
-      loginsByCountry.put(c.getCountry(), 1);
-    }
-
   }
 
   @Override
