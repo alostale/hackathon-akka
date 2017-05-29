@@ -37,7 +37,7 @@ public class LoginProcessorActor extends AbstractPersistentActor {
         }
 
       });
-    }).matchEquals("print", s -> System.out.println(loginsByCountry)).build();
+    }).matchEquals("print", s -> loginsByCountry.printLoginsByCountry()).build();
   }
 
   // @Override
